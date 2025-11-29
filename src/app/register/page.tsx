@@ -1,8 +1,11 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { RegisterForm } from '@/components/register-form/register-form'
 import type { CartItem } from '@/types'
+import { RegisterHeader } from '@/components/register/RegisterHeader'
+import { RegisterForm } from '@/components/register/RegisterForm'
+import { RegisterSummary } from '@/components/register/RegisterSummary'
+import { AnimatePresence, motion } from 'framer-motion'
 
 interface RegisterPageProps {
   searchParams: {
@@ -28,14 +31,30 @@ export default function RegisterPage({ searchParams }: RegisterPageProps) {
 
   const handleRegister = (userData: { name: string; email: string }) => {
     // Implement registration logic
-    router.push('/confirmation')
+    router.push('/tickets')
   }
 
   return (
-    <RegisterForm
-      onRegister={handleRegister}
-      onBack={() => router.push('/tickets')}
-      cartItems={cartItems}
-    />
+    <AnimatePresence mode="wait">
+      <motion.div
+        key="register"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <RegisterHeader onBack={() => router.push('/tickets')} />
+
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <RegisterForm onRegister={handleRegister} />
+
+            <RegisterSummary cartItems={cartItems} />
+          </div>
+        </div>
+
+      </motion.div>
+    </AnimatePresence>
   )
 }

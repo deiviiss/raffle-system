@@ -1,8 +1,11 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { History } from '@/components/history/history'
+import { HistoryHeader } from '@/components/history/HistoryHeader'
+import { Footer } from '@/components/layout/Footer'
+import { HistoryList } from '@/components/history/HistoryList'
 import type { CartItem } from '@/types'
+import { AnimatePresence, motion } from 'framer-motion'
 
 interface HistoryPageProps {
   searchParams: {
@@ -27,9 +30,20 @@ export default function HistoryPage({ searchParams }: HistoryPageProps) {
   ]
 
   return (
-    <History
-      cartItems={cartItems}
-      onBack={() => router.push('/')}
-    />
+    <AnimatePresence mode="wait">
+      <motion.div
+        key="history"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <HistoryHeader onBack={() => router.push('/')} />
+
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <HistoryList cartItems={cartItems} />
+        </div>
+      </motion.div>
+    </AnimatePresence>
   )
 }
